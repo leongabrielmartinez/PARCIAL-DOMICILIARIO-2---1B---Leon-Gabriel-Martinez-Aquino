@@ -1,21 +1,16 @@
 /*
------------CONSIGNA PRIMER PARCIAL (Parte 2)----------------------------------
-1. Sustituye uno de los botones por un interruptor deslizante (switch) de dos posiciones.
-Dependiendo de la posición del interruptor, el display debe mostrar o bien el contador (como
-en la Parte 1) o los números primos en el rango de 0 a 99.
-2. Investiga un componente electrónico adicional que podría mejorar este proyecto.
-Proporciona una descripción detallada del componente, su función y cómo se podría
-integrar en el proyecto.
+-----------CONSIGNA PRIMER PARCIAL (Parte 3)----------------------------------
+1. Considerando el último número de tu número de documento (DNI o documento de
+identidad), agrega un componente adicional que afecte el funcionamiento del proyecto.
+Describe en detalle qué hace este nuevo componente y cómo se integra en el proyecto.
 
-Investigar en la semana y agregar uno de los siguientes componentes:
--Sensor de flexión
--Sensor de fuerza
--Sensor de temperatura
+-Si tu número de documento termina en (0-3) deberás implementar a tu proyecto la
+fotoresistencia
 ---------------------------------------------------------------------
 #define CERO 10
-#define UNO 11
+#define UNO 13
 #define DOS 12
-#define TRES 13
+#define TRES 11
 #define CUATRO 7
 #define CINCO 6
 #define SEIS 5
@@ -50,6 +45,11 @@ int lecturasTemperatura = 0;
 int velocidad = 0;
 //motor cc
 
+#define FOTORESISTENCIA A1
+int luminosidad = 0;
+int luminosidadRelativa = 0;
+//resistencia
+
 
 
 void setup()
@@ -72,6 +72,9 @@ void setup()
   
   pinMode(MOTORCC, OUTPUT);
   //motor
+  
+  pinMode(FOTORESISTENCIA, INPUT);
+  //fotoresistencia
 
   Serial.begin(9600);
 }
@@ -121,7 +124,20 @@ if (contador >= 99)
   
 lecturasTemperatura = map(analogRead(SENSOR_TMP),20,358, -40,125);
 /*lee los valores de el sensor de temperatura y hace la 
-convercion de valores que indican la temperatura*/ 
+convercion de valores que indican la temperatura*/
+  
+luminosidad = analogRead(FOTORESISTENCIA);
+luminosidadRelativa = luminosidad - 55;
+/*la luminisidad relativa afecta los led de los 7 segmentos 
+siguientes: B-G-C*/
+  
+  
+//la luminosdad se le resta 55 para que la max luminosidad sea 255
+if (luminosidadRelativa <=1)
+{
+//si la luminosidad es negativa se establece en 0
+luminosidadRelativa = 0;
+} 
 }
 
 
@@ -142,7 +158,8 @@ es mayor o igual al intervalo entonces aumento el contador
    previoMillis = actualMillis;
 //actualizo el tiempo previo
    contador += 1;
-  }    
+  }
+     
 }
 
 
@@ -362,81 +379,107 @@ void EncenderTodo()
 
 /* funciones para activar los led de los 7 segmentos para mostrar el 
 numero especifico*/
+
+/*altero el encendido de los led para que se enciendan segun la 
+luminosidad relativa*/
 void EncenderCero(int tiempo)
-{	ApagarTodo();
-  	EncenderTodo();  	
-    ApagarLed(CERO, 0);
-    delay(tiempo);    
+{	ApagarTodo();  
+  EncenderLed(UNO, 0);
+  EncenderLed(DOS, 0);
+  analogWrite(TRES,luminosidadRelativa);
+  EncenderLed(CUATRO,0);
+  EncenderLed(CINCO,0);
+  analogWrite(SEIS,luminosidadRelativa);
+  delay(tiempo);    
 }
 
 void EncenderUno(int tiempo)
 {	ApagarTodo();
-    EncenderLed(TRES,0);
-    EncenderLed(SEIS,0);
+  analogWrite(TRES,luminosidadRelativa);
+  analogWrite(SEIS,luminosidadRelativa);
     delay(tiempo);    
 }
 
 void EncenderDos(int tiempo)
 {	ApagarTodo();
-    EncenderTodo();
-    ApagarLed(UNO, 0);
-    ApagarLed(SEIS, 0);  
-    delay(tiempo);    
+  analogWrite(CERO,luminosidadRelativa);
+  EncenderLed(DOS, 0);
+  analogWrite(TRES,luminosidadRelativa);
+  EncenderLed(CUATRO,0);
+  EncenderLed(CINCO,0); 
+  delay(tiempo);    
 }
 
 void EncenderTres(int tiempo)
 {	ApagarTodo();
-    EncenderTodo();
-    ApagarLed(UNO, 0);
-    ApagarLed(CUATRO, 0);        
+  analogWrite(CERO,luminosidadRelativa);
+  EncenderLed(DOS, 0);
+  analogWrite(TRES,luminosidadRelativa);
+  EncenderLed(CINCO,0);
+  analogWrite(SEIS,luminosidadRelativa);   
     delay(tiempo);    
 }
 
 void EncenderCuatro(int tiempo)
 {	ApagarTodo();
-    EncenderTodo();
-    ApagarLed(DOS, 0);
-    ApagarLed(CUATRO, 0);    
-    ApagarLed(CINCO, 0);
-    delay(tiempo);    
+  analogWrite(CERO,luminosidadRelativa);  
+  analogWrite(TRES,luminosidadRelativa);  
+  analogWrite(SEIS,luminosidadRelativa);
+  EncenderLed(UNO, 0);
+  delay(tiempo);    
 }
 
 void EncenderCinco(int tiempo)
 {	ApagarTodo();
-    EncenderTodo();
-    ApagarLed(TRES, 0);
-    ApagarLed(CUATRO, 0);    
-    delay(tiempo);    
+  
+  EncenderLed(UNO, 0);
+  EncenderLed(DOS, 0);
+  analogWrite(CERO,luminosidadRelativa);     
+  analogWrite(SEIS,luminosidadRelativa);  
+  EncenderLed(CINCO,0);
+  delay(tiempo);    
 }
 
 void EncenderSeis(int tiempo)
 {	ApagarTodo();
-    EncenderTodo();
-    ApagarLed(TRES, 0);   
+  analogWrite(CERO,luminosidadRelativa);
+  EncenderLed(UNO, 0);
+  EncenderLed(DOS, 0);
+  EncenderLed(CUATRO,0);
+  EncenderLed(CINCO,0);
+  analogWrite(SEIS,luminosidadRelativa); 
     delay(tiempo);    
 }
 
 void EncenderSiete(int tiempo)
 {	
     ApagarTodo();
-    EncenderLed(DOS,0); 
-    EncenderLed(TRES,0);
-    EncenderLed(SEIS,0);
+  EncenderLed(DOS, 0);
+  EncenderLed(TRES,0);
+  analogWrite(SEIS,luminosidadRelativa); 
     delay(tiempo);    
 }
 
 void EncenderOcho(int tiempo)
 {	
     ApagarTodo();
-    EncenderTodo();
+  EncenderLed(UNO, 0);
+  EncenderLed(DOS, 0); 
+  EncenderLed(CUATRO,0);
+  EncenderLed(CINCO,0);
+  analogWrite(CERO,luminosidadRelativa);  
+  analogWrite(TRES,luminosidadRelativa);  
+  analogWrite(SEIS,luminosidadRelativa);
     delay(tiempo);
 }
 
 void EncenderNueve(int tiempo)
 {	
     ApagarTodo();
-    EncenderTodo();
-    ApagarLed(CUATRO, 0);  
-    ApagarLed(CINCO, 0);  
+  EncenderLed(UNO, 0);
+  EncenderLed(DOS, 0); 
+  analogWrite(CERO,luminosidadRelativa);  
+  analogWrite(TRES,luminosidadRelativa);  
+  analogWrite(SEIS,luminosidadRelativa);
     delay(tiempo);
 }
