@@ -10,6 +10,7 @@ Utilizando la fotoresitencia se regula la intensidad de la luz de 3 led de ambos
 
 ## Función principal
 Se alteraron las 9 funciones encargadas de representar los numeros, ahora los leds (CERO - TRES - SEIS) responden a la "luminosidadRelativa" calculada de la siguiente manera (valor del sensor de fotoresistencia - 55). 
+
 Este calculo esta dado para restringir el valor a 255 (maximo voltaje entregado por arduino) por que el maximo valor devuelto por la fotoresistencia es 310.
 
 ~~~ C (lenguaje en el que esta escrito)
