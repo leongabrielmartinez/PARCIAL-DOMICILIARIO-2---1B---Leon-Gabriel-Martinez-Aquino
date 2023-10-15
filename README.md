@@ -4,7 +4,7 @@
 
 
 ## Proyecto: Parte 3 Parcial Domiciliario SPD.
-![Tinkercad](img/imagenP2SPD.png)
+![Tinkercad](img/imagenP3SPD.png)
 
 
 ## Descripción
