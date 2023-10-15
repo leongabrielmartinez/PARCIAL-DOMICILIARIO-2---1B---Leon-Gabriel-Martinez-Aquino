@@ -34,7 +34,7 @@ void EncenderNueve(int tiempo)
 - Distintos sitios web.
 ---
 ## Fotoresistencia:
-Definicion: El LDR (Light Dependent Resistor) o fotorresistencia o s es un componente eléctrico que varía su resistencia en función de la luz que llega a la superficie del dispositivo.
+Definicion: El LDR (Light Dependent Resistor) o fotorresistencia es un componente eléctrico que varía su resistencia en función de la luz que llega a la superficie del dispositivo.
 
 En tinkercad la fotoresistencia se utiliza conectandola a 3 pines (pin analogico, 5 volts y gnd) y esta hace uso de los 5 volts devolviendo un voltaje especifico al pin analogico que se representado en un rango de (1 a 310).
 
