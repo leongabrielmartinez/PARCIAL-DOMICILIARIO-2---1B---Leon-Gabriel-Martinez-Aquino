@@ -10,7 +10,7 @@
 muestre los números pares.
 
 ## Función principal
-Verifica si el numero es par o impar
+Verifica si el numero es par o impar y retorna un booleano que indica (true == par) o (false == impar).
 
 ~~~ C (lenguaje en el que esta escrito)
 bool CalcularNumerosPares(int numero)
