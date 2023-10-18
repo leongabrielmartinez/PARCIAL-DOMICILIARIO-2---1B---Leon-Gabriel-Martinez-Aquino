@@ -1,11 +1,8 @@
 /*
------------CONSIGNA PRIMER PARCIAL (Parte 3)----------------------------------
-1. Considerando el último número de tu número de documento (DNI o documento de
-identidad), agrega un componente adicional que afecte el funcionamiento del proyecto.
-Describe en detalle qué hace este nuevo componente y cómo se integra en el proyecto.
-
--Si tu número de documento termina en (0-3) deberás implementar a tu proyecto la
-fotoresistencia
+-----------CONSIGNA PRIMER PARCIAL (Parte 4)----------------------------------
+-Si tu número de documento termina en (0-3) deberás modificar la lógica de tu
+proyecto para que el 7 segmentos que mostraba los números primos ahora
+muestre los números pares
 ---------------------------------------------------------------------
 #define CERO 10
 #define UNO 13
@@ -33,7 +30,7 @@ unsigned long previoMillis = 0;
 //unsigned long ("se usa para definir que el numero no puede 
 //ser negativo")
 
-int ultimoPrimoEncontrado = 0;
+int ultimoParEncontrado = 0;
 int contador = 0;
 //variables
 
@@ -79,14 +76,17 @@ void setup()
   Serial.begin(9600);
 }
 
+/*Si tu número de documento termina en (0-3) deberás modificar 
+la lógica de tu proyecto para que el 7 segmentos que mostraba 
+los números primos ahora muestre los números pares*/
 
 void loop()
 {
 if (digitalRead(INTERRUPTOR_SWITCH)==1)
 //si el switch esta apagado muestro solo numeros primos.
 {
-  PrintContadorNumerosPrimos(contador);
-//muestro solo numeros primos
+  PrintContadorNumerosPares(contador);
+//muestro solo numeros pares
   velocidad = (contador + lecturasTemperatura) + 31;
 /*la velocidad se calcula sumando el contador y los valores del 
 sensor de temperatura y se le suma 26 (para alcanzar el voltaje max
@@ -163,40 +163,19 @@ es mayor o igual al intervalo entonces aumento el contador
 }
 
 
-bool CalcularNumerosPrimos(int numero)
+bool CalcularNumerosPares(int numero)
 {
-//valida si un numero es primo
-    if (numero <= 1) 
-    {
-        return false;
-    }
-//el 0 y el 1 no son numeros primos
-    else if (numero <= 3) 
+    if (numero % 2 == 0) 
+      //el numero es par
     {
         return true;
     }
-//casos especiales para 2 y 3
   
-    if (numero % 2 == 0 || numero % 3 == 0) 
-//Si es divisible por 2 o 3, no es primo
-    {
-        return false;
-    }
-  
-    int i = 5;
-    while (i * i <= numero)
-/*Comprobar divisibilidad por números de la forma 6k ± 1.
-este proceso busca divisores, si los encuentra es porque 
-el numero no es primo.*/
-    {
-        if (numero % i == 0 || numero % (i + 2) == 0) 
-        {
-            return false;
-        }
-        i += 6;
-    }
-    return true;
-// Si no se encontraron divisores, el número es primo
+  else
+    //caso contrario es inpar
+  {
+     return false;
+  }
 }
 
 
@@ -258,17 +237,17 @@ switch(digit)
 }  
 }
 
-void PrintContadorNumerosPrimos(int contador)
+void PrintContadorNumerosPares(int contador)
 {
-//imprime el ultimo numero primo hasta que aparezca otro.
-if (CalcularNumerosPrimos(contador))
+//imprime el ultimo numero par hasta que aparezca otro.
+if (CalcularNumerosPares(contador))
   {
   PrintContador(contador);
-  ultimoPrimoEncontrado = contador;
+  ultimoParEncontrado = contador;
   }
 else
 {
-  PrintContador(ultimoPrimoEncontrado);
+  PrintContador(ultimoParEncontrado);
 } 
 }
 
@@ -483,3 +462,4 @@ void EncenderNueve(int tiempo)
   analogWrite(SEIS,luminosidadRelativa);
     delay(tiempo);
 }
+
