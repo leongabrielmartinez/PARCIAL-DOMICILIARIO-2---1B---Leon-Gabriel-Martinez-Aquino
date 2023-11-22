@@ -1,0 +1,229 @@
+#include <IRremote.hpp>
+#include <Servo.h>
+#include <LiquidCrystal_I2C.h>
+#include <Servo.h>
+
+//SENSOR INFRAROJO
+#define IR_RECEPTOR 11
+IRrecv irrecv (IR_RECEPTOR);//pin receptor de señales
+
+//SENSOR TEMPERATURA
+#define SENSOR_TMP A0
+int lecturasTemperatura = 0;
+
+//SERVO 
+#define PIN_SERVO_AZUL 3
+Servo miServoAzul;	
+
+//LCD
+LiquidCrystal_I2C lcd(0x20,16,2);  //Crear el objeto lcd  dirección  0x3F y 16 columnas x 2 filas
+
+//TIEMPO
+unsigned long previoMillis = 0;
+unsigned long actualMillis = 0;//= millis()
+int INTERVALO = 500;
+
+//LEDS
+#define LED_ROJA 5
+#define LED_VERDE 4
+
+bool estado = false;
+bool incendio = false;
+bool nuevoIncendio = false;
+
+
+
+
+void setup()
+{
+  Serial.begin(9600);
+  
+  lcd.init();
+  lcd.backlight();//Encender la luz de fondo.
+    
+  IrReceiver.begin(IR_RECEPTOR, ENABLE_LED_FEEDBACK); // inicia el receptor
+  
+  miServoAzul.attach(PIN_SERVO_AZUL);
+  miServoAzul.write(0);
+  miServoAzul.attach(PIN_SERVO_AZUL, 500, 2500);
+  
+  pinMode(SENSOR_TMP, INPUT);
+  pinMode(LED_ROJA, OUTPUT);
+  pinMode(LED_VERDE, OUTPUT);
+}
+
+void loop()
+{	
+    lecturasTemperatura = map(analogRead(SENSOR_TMP),20,358, -40,125);
+	ControlRemoto();
+    
+  if (estado)
+  {
+    SistemaIncendios();
+  }
+  else 
+  {
+   	ApagarTodo();
+  }
+}
+
+/*
+El programa se ejecuta, segun el intervalo especificado.
+*/
+void SistemaIncendios()
+{
+    actualMillis = millis();
+    
+    	if (actualMillis - previoMillis >= INTERVALO)
+  		{
+      		ActualizarPrograma(actualMillis);
+  		}  
+}
+
+/*
+Los componentes actuan diferente en caso de que suceda un incendio, 
+pero siempre se actualiza la temporada.
+*/
+void ActualizarPrograma(int actualMillis)
+{			
+  		if (incendio == false)
+        {
+            EncenderLed(LED_VERDE);
+            ApagarLed(LED_ROJA);
+            miServoAzul.write(0);
+          
+            previoMillis = actualMillis;
+  		 	lcd.clear(); 
+  	  		lcd.print("Temp: ");
+      		lcd.print(lecturasTemperatura);
+      		lcd.print("°C");
+      		lcd.setCursor(0,1);
+      		lcd.print("Est: ");
+        }
+  		else
+        {	
+            miServoAzul.write(90);
+            ApagarLed(LED_VERDE);
+          	EncenderLed(LED_ROJA);
+            TitilarLed(LED_ROJA, 700);
+            
+          /*
+            if (actualMillis - previoMillis >= 700)
+  			{
+      			ApagarLed(LED_ROJA);
+                previoMillis = actualMillis;
+  			}
+            */
+          
+        }
+  
+      		ActualizarTemporada(lecturasTemperatura);
+}
+
+/*
+segun el boton ingresado se realiza cierta accion.
+*/
+void UsarBotones(auto valor)
+{
+  	  switch(valor)
+      {
+        	case 4278238976://boton apagar
+        		estado = !estado;
+            case 4010852096:
+        		break;
+        
+
+      }	
+}
+
+/*
+Si el sensor infrarojo decodifica algo, se lo envia a la funcion de usar botones.
+*/
+void ControlRemoto()
+{
+      if (IrReceiver.decode()) 
+    {
+      auto valor =IrReceiver.decodedIRData.decodedRawData;
+      //auto se utiliza para deducir una variable en tiempo de compilación.
+      //Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX);
+      //LA FUNCION HEX SE USA PARA MANEJAR NOMBRES EN CODIGO.
+      Serial.println(valor);
+      UsarBotones(valor);
+      IrReceiver.resume();
+    }
+}
+
+
+/*
+Segun la temperatura indica la temporada mediante el panel lcd, si la temperatura
+es mayor a 59°c entorces se activa la bandera de incendio,
+*/
+void ActualizarTemporada(int temperatura)
+{
+    if (temperatura < 10) 
+    {
+      lcd.print("Invierno");
+      incendio = false;
+    }
+	else if(temperatura < 25)
+    {
+      lcd.print("Otono");
+      incendio = false;
+    }
+  	else if(temperatura < 30)
+    {
+      lcd.print("Primavera");
+      incendio = false;
+    }
+  	else if(temperatura < 60)
+    {
+      lcd.print("Verano");
+      incendio = false;
+    }
+    else
+    {
+      nuevoIncendio = true;
+      if (incendio != nuevoIncendio)
+      {
+      	lcd.clear();
+        lcd.print("INCENDIO");
+        lcd.setCursor(0,1);
+        lcd.print("Temp: ");
+        lcd.print(lecturasTemperatura);
+        lcd.print("°C");
+        incendio = true;
+      }
+    }
+}
+
+void ApagarTodo()
+{
+	ApagarLed(LED_ROJA);
+    ApagarLed(LED_VERDE);
+    miServoAzul.write(0);
+    lcd.clear();
+}
+
+void EncenderLed(char ledX)
+{
+    digitalWrite(ledX, HIGH);  
+}
+
+void ApagarLed(char ledX)
+{
+    digitalWrite(ledX, LOW);
+}
+
+void TitilarLed(char ledX, int delay)
+{
+
+	if (actualMillis - previoMillis >= delay)
+	{
+	ApagarLed(ledX);
+	previoMillis = actualMillis;
+	}  
+}
+
+
+
+
