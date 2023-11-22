@@ -1,41 +1,28 @@
 ## Integrantes 
 - Leon Gabriel Martinez Aquino - 1B
 
-## Proyecto: Parte 4 Parcial Domiciliario SPD.
-![Tinkercad](img/imagenP3SPD.png)
+## Proyecto: Segundo Parcial Domiciliario SPD.
+![Tinkercad](t725.png)
 
+## Componenetes.
+Arduino UNO.
+Sensor de temperatura.
+Control remoto IR (Infrarrojo).
+Display LCD (16x2 caracteres).
+Servo motor.
+Cables y resistencias según sea necesario.
+Protoboard para realizar las conexiones.
+Dos leds.
 
-## Descripción
--Si tu número de documento termina en (0-3) deberás modificar la lógica de tu proyecto para que el 7 segmentos que mostraba los números primos ahora
-muestre los números pares.
+## Descripción Sistema de incendio con Arduino.
+El sistema se enciende y apaga con control remoto, si el sistema esta encendido se muestra en el Display LCD la temperatura actual y se enciende el led verde. 
+Si la temperatura fuera mayor a 59°C se mostraria un mensaje de incendio y la temperatura en el Display LCD , ademas se activaria un servo y la titilaria la led roja.
 
-## Función principal
-Verifica si el numero es par o impar y retorna un booleano que indica (true == par) o (false == impar).
-
-~~~ C (lenguaje en el que esta escrito)
-bool CalcularNumerosPares(int numero)
-{
-    if (numero % 2 == 0) 
-      //el numero es par
-    {
-        return true;
-    }
-  
-  else
-    //caso contrario es impar
-  {
-     return false;
-  }
-}
-~~~
 
 ## :robot: Link al proyecto
-- [proyecto](https://www.tinkercad.com/things/fQQyTkkpIwD-copy-of-p3-parcial-domiciliario-1b-leon-gabriel-martinez-aquino/editel?sharecode=XN7myqrhVL_ucZuu5JtpKF-a-DoTNveqAZhfA0nFYwE)
+- [proyecto TKC](https://www.tinkercad.com/things/kLCt6G5Fe29-parcial-domiciliario-2-1b-leon-gabriel-martinez-aquino/editel?sharecode=5TzxzrP_L5w_Xiq5je0ZOPdIxM8QHviStjDdwteeIbE)
+- [proyecto GDB](https://onlinegdb.com/CmoRNGELD)
 
----
-### Fuentes
-- Distintos sitios web.
----
 
 
 
