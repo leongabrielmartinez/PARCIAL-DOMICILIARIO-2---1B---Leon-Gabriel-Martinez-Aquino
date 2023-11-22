@@ -25,7 +25,9 @@ Dos leds.
 ## Descripción Sistema de incendio con Arduino.
 El sistema se enciende y apaga con control remoto, si el sistema esta encendido se muestra en el Display LCD la temperatura y temporada actual. 
 
-Si la temperatura fuera mayor a 59°C se mostraria un mensaje de incendio y la temperatura en el Display LCD , ademas se activaria un servo y la titilaria la led roja.
+Si la temperatura fuera mayor a 59°C se mostraria un mensaje de incendio y la temperatura en el Display LCD , ademas se activaria un servo.
+
+El servo por defecto esta a 0 grados de inclinacion, si hay un incendio cambia a 90 grados.
 
 El led rojo titila si hay un incendio, por defecto esta apagado.
 
