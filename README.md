@@ -2,7 +2,7 @@
 - Leon Gabriel Martinez Aquino - 1B
 
 ## Proyecto: Segundo Parcial Domiciliario SPD.
-![Tinkercad](t725.png)
+![Tinkercad](img/t725.png)
 
 ## Componenetes.
 Arduino UNO.
