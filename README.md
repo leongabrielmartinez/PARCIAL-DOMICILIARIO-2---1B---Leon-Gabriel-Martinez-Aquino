@@ -28,6 +28,7 @@ El sistema se enciende y apaga con control remoto, si el sistema esta encendido 
 Si la temperatura fuera mayor a 59°C se mostraria un mensaje de incendio y la temperatura en el Display LCD , ademas se activaria un servo y la titilaria la led roja.
 
 El led rojo titila si hay un incendio, por defecto esta apagado.
+
 El led verde se apaga si hay un incendio, esta prendido si el sistema esta funcionando.
 
 
